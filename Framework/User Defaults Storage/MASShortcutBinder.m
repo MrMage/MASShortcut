@@ -1,6 +1,26 @@
 #import "MASShortcutBinder.h"
 #import "MASShortcut.h"
 
+// Allows decoding `MASShortcut` objects at the top level for secure decoding in addition to Plist types.
+// Inspired by https://www.kairadiagne.com/2020/01/13/nssecurecoding-and-transformable-properties-in-core-data.html.
+@interface MASShortcutDecodingTransformer : NSSecureUnarchiveFromDataTransformer
+
+@end
+
+
+@implementation MASShortcutDecodingTransformer
+
++ (NSArray<Class> *)allowedTopLevelClasses {
+	return [[super allowedTopLevelClasses] arrayByAddingObject:[MASShortcut class]];
+}
+
++ (void)load {
+	[NSValueTransformer setValueTransformer:[[self alloc] init] forName:@"MASShortcutDecodingTransformer"];
+}
+
+@end
+
+
 @interface MASShortcutBinder ()
 @property(strong) NSMutableDictionary *actions;
 @property(strong) NSMutableDictionary *shortcuts;
@@ -16,7 +36,7 @@
     [self setActions:[NSMutableDictionary dictionary]];
     [self setShortcuts:[NSMutableDictionary dictionary]];
     [self setShortcutMonitor:[MASShortcutMonitor sharedMonitor]];
-    [self setBindingOptions:@{NSValueTransformerNameBindingOption: NSKeyedUnarchiveFromDataTransformerName}];
+    [self setBindingOptions:@{NSValueTransformerNameBindingOption: @"MASShortcutDecodingTransformer"}];
     return self;
 }
 
