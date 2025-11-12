@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.10"
   s.source                = { :git => 'https://github.com/shpakovski/MASShortcut.git', :tag => s.version }
   s.source_files          = 'Framework/**/*.{h,m}'
-  s.exclude_files         = 'Framework/**/*Tests.m'
+  s.exclude_files         = 'Framework/**/*Tests.m', 'Framework/include/**/*'
   s.osx.frameworks        = 'Carbon', 'AppKit'
   s.requires_arc          = true
   s.osx.resource_bundles  = { 'MASShortcut' => ['Resources/*.lproj'] }
